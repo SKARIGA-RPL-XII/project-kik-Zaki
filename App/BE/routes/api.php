@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BadgeController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DiscountController;
@@ -42,3 +43,6 @@ Route::resource('tasks',TasksController::class)->middleware('auth:sanctum');
 
 // Employe Management
 Route::resource('employes', EmployeController::class)->middleware(['auth:sanctum','admin']);
+
+// Management Badge
+Route::resource('badges', BadgeController::class)->middleware(['auth:sanctum']);
