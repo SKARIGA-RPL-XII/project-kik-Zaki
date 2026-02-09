@@ -15,7 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('username')->nullable();
             $table->string('email')->unique();
+            $table->enum('gender' , ['LK','PR'])->nullable();
+            $table->string('profile_image')->nullable();
             $table->string('password');
+            $table->integer('no_tlp')->nullable()->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('role_id')->constrained('roles', 'id')->cascadeOnUpdate()->cascadeOnDelete();
             $table->rememberToken();

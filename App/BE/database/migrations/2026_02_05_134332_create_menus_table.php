@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('menu_image');
-            $table->foreignId('category_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
             $table->integer('price')->nullable();
-            $table->integer('stock')->default(1);
+            $table->integer('stock')->nullable()->default(1);
             $table->boolean('is_active')->default(true);
+            $table->foreignId('category_id')->constrained()->restrictOnDelete();
+            $table->foreignId('discount_id')->nullable()->constrained()->restrictOnDelete();
             $table->timestamps();
         });
     }

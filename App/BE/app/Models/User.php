@@ -18,20 +18,13 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'username',
-        'email',
-        'password',
-    ];
+    protected $guarded = ['id'];
 
     public function role(){
         return $this->belongsTo(Role::class);
     }
     public function employe(){
         return $this->hasOne(Employe::class);
-    }
-    public function customer(){
-        return $this->hasOne(Customer::class);
     }
 
     /**
@@ -42,6 +35,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'role_id'
     ];
 
     /**

@@ -25,14 +25,17 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (AuthenticationException $ex) {
-            return Controller::ERROR('errorr', 'Unauthenticated.', 401);
+        $exceptions->render(function (AuthenticationException $auth) {
+            return response()->json([
+                "status" => "invalid_token",
+                "message" => "Invalid or expired token"
+            ], 401);
         });
 
         $exceptions->render(function (ValidationException $ex) {
             return response()->json([
                 "message" => "error validations",
                 "errors" => $ex->errors()
-            ]);
+            ],400);
         });
     })->create();

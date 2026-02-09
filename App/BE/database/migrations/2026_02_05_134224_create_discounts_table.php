@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
+        Schema::create('discounts', function (Blueprint $table) {
             $table->id();
-            $table->string('profile_image');
-            $table->enum('gender', ['LK', 'PR']);
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('title')->unique();
+            $table->string('description');
+            $table->integer('value_discount');
+            $table->boolean('is_active')->default(true);
+            $table->date('start_date');
+            $table->date('end_date');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('discounts');
     }
 };

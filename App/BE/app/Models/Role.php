@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    //
+    protected $guarded = ['id'];
+
+    public $hidden = ['id' , 'created_at' , 'updated_at'];
 }

@@ -12,7 +12,8 @@ class TasksController extends Controller
      */
     public function index()
     {
-        //
+        $data = Tasks::all();
+        return Controller::OKE('success' , 'succes get data' , $data , 200);
     }
 
     /**
@@ -28,7 +29,22 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "task_name" => "string|required",
+            "description" =>"required|string",
+            "start_date" => "date",
+            "end_date" => "date"
+        ]);
+
+        $task = Tasks::create([
+            "task_name" => $request->task_name,
+            "description" => $request->description,
+            "start_date" => $request->start_date,
+            "end_date" => $request->end_date,
+            "task_from" => $request->user()->role->name
+        ]);
+
+        return Controller::OKE('success' , 'succes create data' , $task, 200);
     }
 
     /**
@@ -44,7 +60,7 @@ class TasksController extends Controller
      */
     public function edit(Tasks $tasks)
     {
-        //
+
     }
 
     /**
@@ -52,7 +68,22 @@ class TasksController extends Controller
      */
     public function update(Request $request, Tasks $tasks)
     {
-        //
+        $request->validate([
+            "task_name" => "required|string",
+            "description" =>"required|string",
+            "start_date" => "date",
+            "end_date" => "date"
+        ]);
+
+        $tasks->create([
+            "task_name" => $request->task_name,
+            "description" => $request->description,
+            "start_date" => $request->start_date,
+            "end_date" => $request->end_date,
+            "task_from" => $request->user()->role->name
+        ]);
+
+        return Controller::OKE('success' , 'succes update data' , $tasks, 200);
     }
 
     /**
@@ -60,6 +91,7 @@ class TasksController extends Controller
      */
     public function destroy(Tasks $tasks)
     {
-        //
+        $tasks->delete();
+        return Controller::OKE('success' , 'succes delete data' , [], 200);
     }
 }
