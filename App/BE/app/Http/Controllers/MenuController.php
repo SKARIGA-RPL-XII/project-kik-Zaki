@@ -12,13 +12,12 @@ class MenuController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+   public function index(Request $request)
     {
         $page = $request->query('page', 0);
         $size = $request->query('size', 10);
 
-        $query = Menu::with('category', 'discount')
-            ->where('is_active', true);
+        $query = Menu::with('category', 'discount');
 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%');

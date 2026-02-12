@@ -11,43 +11,69 @@ class UserController extends Controller
 {
     public function updateProfile(Request $request, $id)
     {
-        $request->validate([
-            "email" => "sometimes|required|email|unique:users,email," . $id,
-            "password" => "required|sometimes",
-            "no_tlp" => "required|sometimes|integer|unique:users,no_tlp," . $id,
-            "addres" => "required|sometimes|string",
-            "gender" => "required|sometimes|in:LK,PR",
-            "profile_image" => "required|sometime|file|mimes:png,jpg,webp,jpeg|max:2040",
-            "username" => "required|sometimes|string",
+        $validated = $request->validate([
+            "email" => "sometimes|email|unique:users,email," . $id,
+            "password" => "sometimes|string|min:6",
+            "no_tlp" => "sometimes|integer|unique:users,no_tlp," . $id,
+            "addres" => "sometimes|string",
+            "gender" => "sometimes|in:LK,PR",
+            "profile_image" => "sometimes|file|mimes:png,jpg,jpeg,webp|max:2040",
+            "username" => "sometimes|string",
         ]);
 
         $user = User::findOrFail($id);
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($request->password);
+        } else {
+            unset($validated['password']);
+        }
+
+        if ($request->hasFile('profile_image')) {
+            if ($user->profile_image) {
+                Storage::disk('public')->delete($user->profile_image);
+            }
+
+            $validated['profile_image'] = $request
+                ->file('profile_image')
+                ->store('profile_images', 'public');
+        }
+
+        $user->update($validated);
+
+        return Controller::OKE(
+            'success',
+            'Profile updated successfully',
+            $user,
+            200
+        );
+    }
+
+    public function me(Request $request)
+    {
+        $user = $request->user();
 
         if (!$user) {
-            return Controller::ERROR('error', 'user not found', 404);
+            return response()->json([
+                "status" => "error",
+                "message" => "User not found",
+            ], 404);
         }
 
-        if ($request->password) {
-            $user->update([
-                "password" => Hash::make($request->password)
-            ]);
-        }
+        $profileImageUrl = $user->profile_image
+            ? asset('storage/' . $user->profile_image)
+            : null;
 
-        if ($request->hasFile('image_profile')) {
-            Storage::delete($request->profile_image);
-            $path = $request->file('profile_image')->store('profile_images', 'public');
-        }
-
-        $user->update([
-            "email" => $request->email,
-            "password" => $request->password,
-            "no_tlp" => $request->no_tlp,
-            "addres" => $request->addres,
-            "gender" => $request->gender,
-            "profile_image" => $path,
-            "username" => $request->username,
-        ]);
-
-        return Controller::OKE('success' , 'success update' , $user , 200);
+        return response()->json([
+            "status" => "success",
+            "data" => [
+                "id" => $user->id,
+                "username" => $user->username,
+                "email" => $user->email,
+                "no_tlp" => $user->no_tlp,
+                "addres" => $user->addres,
+                "gender" => $user->gender,
+                "profile_image" => $profileImageUrl,
+            ],
+        ], 200);
     }
 }

@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('transaction_details', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('transaction_id')->constrained()->restrictOnDelete();
-            $table->foreignId('menu_id')->constrained();
-            $table->integer('menu_qty');
-            $table->integer('price');
-            $table->integer('subtotal');
+            $table->string('name')->unique();
+            $table->string('color')->nullable()->default("#000");
+            $table->integer('capacity')->default(1);
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaction_details');
+        Schema::dropIfExists('rooms');
     }
 };
