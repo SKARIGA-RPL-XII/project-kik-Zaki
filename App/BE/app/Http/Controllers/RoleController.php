@@ -12,7 +12,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $data = Role::all();
+        return Controller::OKE('sucess', 'success get data roles', $data, 200);
     }
 
     /**

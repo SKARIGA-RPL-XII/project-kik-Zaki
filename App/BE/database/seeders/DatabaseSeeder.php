@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -16,21 +17,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         $this->call([
-            CategorySeeder::class,
             RoleSeeder::class,
-            TableSeeder::class,
+            UserSeeder::class,
+            CategorySeeder::class,
+            BadgeSeeder::class,
             DiscountSeeder::class,
-            BadgeSeeder::class
+            TableSeeder::class,
+            SettingSeeder::class,
         ]);
 
-        User::factory()->create([
-            'username' => 'admin',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make("password"),
-            'role_id' => 1,
-        ]);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

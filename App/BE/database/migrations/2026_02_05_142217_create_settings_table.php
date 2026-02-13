@@ -13,16 +13,12 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('name_store')->nullable();
-            $table->string('logo_store')->nullable();
-            $table->string('addres')->nullable();
-            $table->string('no_tlp')->nullable();
-            $table->enum('themes',['light' , 'dark' , 'default' , 'all'])->nullable();
-            $table->json('lists_menus_sidebar')->nullable();
-            $table->json('lists_pages')->nullable();
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
